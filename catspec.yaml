@@ -1,0 +1,188 @@
+swagger: '2.0'
+
+info:
+  version: '1.0'
+  title: Example Cat Service
+  description: This is an example spec for a Cats Service
+
+host: api.fortellis.io
+basePath: /example/v1/cats
+schemes:
+ - https
+
+paths:
+  /health:
+    get:
+      summary: health
+      description: health
+      operationId: health
+      produces:
+        - application/json
+      responses:
+        200:
+          description: OK
+          headers:
+            Content-Language:
+              type: string
+            Content-Type:
+              type: string
+        400:
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        403:
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+  /:
+    get:
+      summary: Get all Cats
+      description: Get all Cats
+      operationId: getCats
+      produces:
+        - application/json
+      responses:
+        200:
+          description: OK
+          headers:
+            Content-Language:
+              type: string
+            Content-Type:
+              type: string
+          schema:
+            $ref: '#/definitions/matchResponse'
+        400:
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        403:
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+  /{id}:
+    get:
+      summary: Get cat by Id
+      description: Get cat by Id
+      operationId: getcatById
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: The id for the specific cat being requested.
+        type: string
+      produces:
+        - application/json
+      responses:
+        200:
+          description: OK
+          headers:
+            Content-Language:
+              type: string
+            Content-Type:
+              type: string
+          schema:
+            $ref: '#/definitions/matchResponse'
+        400:
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        403:
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+  /match:
+    post:
+      summary: Match
+      description: Match
+      operationId: match
+      parameters:
+        - in: body
+          name: catProfile
+          description: cat profile to match
+          schema:
+            $ref: '#/definitions/payload'
+      produces:
+        - application/json
+      responses:
+        200:
+          description: OK
+          headers:
+            Content-Language:
+              type: string
+            Content-Type:
+              type: string
+          schema:
+            $ref: '#/definitions/matchResponse'
+        400:
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        403:
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+
+
+
+definitions:
+
+  # Properties
+  id:
+    type: string
+  firstname:
+    type: string
+  lastname:
+    type: string
+  dob:
+    type: string
+  phone:
+    type: string
+  orgId:
+    type: string
+  email:
+    type: string
+
+
+
+  # Request
+  payload:
+    properties:
+      firstname:
+        $ref: '#/definitions/firstname'
+      lastname:
+        $ref: '#/definitions/lastname'
+      orgId:
+        $ref: '#/definitions/orgId'
+      email:
+        $ref: '#/definitions/email'
+      phone:
+        $ref: '#/definitions/phone'
+    required:
+      - firstname
+      - lastname
+
+
+  # Response
+  matchResponse:
+    type: object
+    properties:
+      data:
+        type: array
+        description: Array of Cats
+        items:
+          properties:
+            name:
+              $ref: '#/definitions/id'
+
+
+  # Common
+  ErrorResponse:
+    properties:
+      code:
+        type: integer
+        format: int32
+      message:
+        type: string
+    required:
+      - code
+      - message
